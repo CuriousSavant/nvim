@@ -1,6 +1,7 @@
 -- Lazy.nvim setup
 local lazypath = vim.fn.stdpath("data") .. "\\lazy\\lazy.nvim"
 
+
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
     "git",
@@ -36,11 +37,10 @@ require("lazy").setup({
   { "nvim-tree/nvim-tree.lua" }, -- File explorer
   { "onsails/lspkind-nvim" }, -- LSP icons
   { "windwp/nvim-autopairs" }, -- Autopairs
+{ "windwp/nvim-ts-autotag" },
 
   -- Icons for file explorer and status line
   { "nvim-tree/nvim-web-devicons" },
-
-
 
   -- Theme
   {
@@ -117,7 +117,9 @@ cmp.setup({
       end,
     }),
   }, -- ปิดวงเล็บที่นี่
+
   mapping = {
+    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.confirm({ select = true })
@@ -191,14 +193,27 @@ cmp.event:on(
 
 -- Treesitter configuration
 require("nvim-treesitter.configs").setup({
-  ensure_installed = { "javascript", "typescript", "html", "css", "lua" },
+  ensure_installed = { "javascript", "typescript", "html", "css", "lua", "json" }, 
+  sync_install = false, -- ติดตั้ง languages แบบ synchronous
+  auto_install = true, -- ติดตั้ง languages อัตโนมัติเมื่อเปิดไฟล์ที่ยังไม่มีการติดตั้ง
+  ignore_install = {}, -- รายชื่อ parsers ที่ไม่ต้องการติดตั้ง
+
   highlight = {
-    enable = true,
+    enable = true, -- เปิดใช้งาน syntax highlighting
+    additional_vim_regex_highlighting = false, -- ไม่ใช้ regex-based highlighting
   },
   indent = {
-    enable = true,
+    enable = true, -- เปิดใช้งานการจัดรูปแบบการย่อหน้าอัตโนมัติ
+  },
+  autotag = {
+    enable = true, -- เพิ่มแท็กปิดอัตโนมัติสำหรับ HTML, XML
+  },
+  context_commentstring = {
+    enable = true, -- เปลี่ยนวิธีการใส่คอมเมนต์ตาม context ของไฟล์
   },
 })
+
+
 
 -- LSP Configurations
 local lspconfig = require("lspconfig")
