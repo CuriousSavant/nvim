@@ -40,6 +40,8 @@ require("lazy").setup({
   -- Icons for file explorer and status line
   { "nvim-tree/nvim-web-devicons" },
 
+
+
   -- Theme
   {
     "folke/tokyonight.nvim",
@@ -60,58 +62,51 @@ local cmp = require('cmp')
 local lspkind = require('lspkind')
 local luasnip = require('luasnip')
 
+local cmp_kinds = {
+  Text = "  ",
+  Method = "  ",
+  Function = "  ",
+  Constructor = "  ",
+  Field = "  ",
+  Variable = "  ",
+  Class = "  ",
+  Interface = "  ",
+  Module = "  ",
+  Property = "  ",
+  Unit = "  ",
+  Value = "  ",
+  Enum = "  ",
+  Keyword = "  ",
+  Snippet = "  ",
+  Color = "  ",
+  File = "  ",
+  Reference = "  ",
+  Folder = "  ",
+  EnumMember = "  ",
+  Constant = "  ",
+  Struct = "  ",
+  Event = "  ",
+  Operator = "  ",
+  TypeParameter = "  ",
+}
+
 cmp.setup({
-  window = {
-    completion = {
-      border = 'rounded',
-      col = 0,
-      side = 'right',
-      winhighlight = 'Normal:CmpPmenu,CursorLine:CmpSel,Search:None',
-    },
-    documentation = {
-      border = 'rounded',
-      col = 0,
-      side = 'right',
-      winhighlight = 'Normal:CmpPmenu,CursorLine:CmpSel,Search:None',
-    },
-  },
+	cmp.setup({
+
+		window = {
+			completion = cmp.config.window.bordered(),
+			documentation = cmp.config.window.bordered(),
+		},
+		experimental = {
+			ghost_text = true,
+			native_menu = false,
+		},
   formatting = {
     format = lspkind.cmp_format({
-      mode = 'symbol', -- 'text' or 'symbol'
-      maxwidth = 50, -- 50 columns
-      ellipsis_char = '…',
       before = function(entry, vim_item)
-        -- Define the icons for each source using Nerd Font icons
-        local icons = {
-          Text = "", -- Text
-          Method = "ƒ", -- Method
-          Function = "", -- Function
-          Constructor = "", -- Constructor
-          Field = "", -- Field
-          Variable = "", -- Variable
-          Class = "ﴯ", -- Class
-          Interface = "", -- Interface
-          Module = "", -- Module
-          Property = "", -- Property
-          Unit = "", -- Unit
-          Value = "", -- Value
-          Enum = "", -- Enum
-          Keyword = "", -- Keyword
-          Snippet = "", -- Snippet
-          Color = "", -- Color
-          File = "", -- File
-          Reference = "", -- Reference
-          Folder = "", -- Folder
-          EnumMember = "", -- EnumMember
-          Constant = "", -- Constant
-          Struct = "", -- Struct
-          Event = "", -- Event
-          Operator = "", -- Operator
-          TypeParameter = "ﴔ" -- TypeParameter
-        }
 
+	vim_item.kind = string.format("%s %s", vim_item.kind, cmp_kinds[vim_item.kind])	-- icons
         -- Set icon and menu
-        vim_item.kind = string.format('%s %s', icons[vim_item.kind] or "", vim_item.kind)
         vim_item.menu = ({
           nvim_lsp = "[LSP]",
           luasnip = "[Snippet]",
@@ -121,7 +116,7 @@ cmp.setup({
         return vim_item
       end,
     }),
-  },
+  }, -- ปิดวงเล็บที่นี่
   mapping = {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -161,6 +156,8 @@ cmp.setup({
     { name = "buffer" },
     { name = "path" },
   }),
+})
+
 })
 
 -- Customize colors and appearance for completion popup
