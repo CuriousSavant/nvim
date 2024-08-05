@@ -1,158 +1,180 @@
--- Lazy.nvim setup
-local lazypath = vim.fn.stdpath("data") .. "\\lazy\\lazy.nvim"
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })]]
+vim.opt.termguicolors = true
+
 
 require("lazy").setup({
-  -- LSP และ Autocompletion
-  { "neovim/nvim-lspconfig" }, -- LSP configurations
-  { "hrsh7th/nvim-cmp" }, -- Autocompletion
-  { "hrsh7th/cmp-nvim-lsp" }, -- LSP source for nvim-cmp
-  { "hrsh7th/cmp-buffer" }, -- Buffer source for nvim-cmp
-  { "hrsh7th/cmp-path" }, -- Path source for nvim-cmp
-  { "L3MON4D3/LuaSnip" }, -- Snippet engine
-  { "saadparwaiz1/cmp_luasnip" }, -- Snippet source for nvim-cmp
+	{ "neovim/nvim-lspconfig" },
+	{ "hrsh7th/nvim-cmp" },
+	{ "hrsh7th/cmp-nvim-lsp" },
+	{ "hrsh7th/cmp-buffer" },
+	{ "hrsh7th/cmp-path" },
+	{ "L3MON4D3/LuaSnip" },
+	{ "saadparwaiz1/cmp_luasnip" },
 
-  -- Syntax Highlighting
-  { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }, -- Treesitter for syntax highlighting
+	{ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
 
-  -- Tailwind CSS
-  { "tailwindlabs/tailwindcss-intellisense" },
+	{ "tailwindlabs/tailwindcss-intellisense" },
 
-  -- Other useful plugins
-  { "nvim-telescope/telescope.nvim" }, -- Fuzzy finder
-  { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }, -- FZF integration
-  { "nvim-lualine/lualine.nvim" }, -- Status line
-  { "nvim-tree/nvim-tree.lua" }, -- File explorer
-  { "onsails/lspkind-nvim" }, -- LSP icons
-  { "windwp/nvim-autopairs" }, -- Autopairs
-  { "windwp/nvim-ts-autotag" },
+	{ "nvim-telescope/telescope.nvim" },
+	{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+	{ "nvim-lualine/lualine.nvim" },
+	{ "nvim-tree/nvim-tree.lua" },
+	{ "onsails/lspkind-nvim" },
+	{ "windwp/nvim-autopairs" },
+	{ "windwp/nvim-ts-autotag" },
+	{ "jose-elias-alvarez/nvim-lsp-ts-utils" },
+	{ "leafgarland/typescript-vim" },
+	{ "mattn/emmet-vim" },
 
-  -- Icons for file explorer and status line
-  { "nvim-tree/nvim-web-devicons" },
 
-  -- Theme
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {},
-  },
-  {
-    "scottmckendry/cyberdream.nvim",
-    lazy = false,
-    priority = 1000,
-  }
+	{ "lukas-reineke/lsp-format.nvim" },
+	   { "jose-elias-alvarez/null-ls.nvim" },
+
+	{ "nvim-tree/nvim-web-devicons" },
+
+	{ "folke/tokyonight.nvim", lazy = false, priority = 1000 },
+	{ "scottmckendry/cyberdream.nvim", lazy = false, priority = 1000 },
+
+
+
+	{ "MunifTanjim/nui.nvim" },
+	{ "VonHeikemen/fine-cmdline.nvim",
+    	config = function()
+        	require('fine-cmdline').setup({
+            	cmdline = {
+                	enable_keymaps = true,
+                	smart_history = true,
+                	prompt = ': '
+            },
+            popup = {
+                position = {
+                    row = "10%",
+                    col = "50%",
+                },
+                size = {
+                    width = "60%"
+                },
+                border = {
+                    style = "rounded",
+                },
+                win_options = {
+                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                },
+            }
+        })
+    end
+}
+
 })
 
--- nvim-cmp setup
 local cmp = require('cmp')
 local lspkind = require('lspkind')
 local luasnip = require('luasnip')
 
 local cmp_kinds = {
-  Text = "  ",
-  Method = "  ",
-  Function = "  ",
-  Constructor = "  ",
-  Field = "  ",
-  Variable = "  ",
-  Class = "  ",
-  Interface = "  ",
-  Module = "  ",
-  Property = "  ",
-  Unit = "  ",
-  Value = "  ",
-  Enum = "  ",
-  Keyword = "  ",
-  Snippet = "  ",
-  Color = "  ",
-  File = "  ",
-  Reference = "  ",
-  Folder = "  ",
-  EnumMember = "  ",
-  Constant = "  ",
-  Struct = "  ",
-  Event = "  ",
-  Operator = "  ",
-  TypeParameter = "  ",
+	Text = "  ",
+	Method = "  ",
+	Function = "  ",
+	Constructor = "  ",
+	Field = "  ",
+	Variable = "  ",
+	Class = "  ",
+	Interface = "  ",
+	Module = "  ",
+	Property = "  ",
+	Unit = "  ",
+	Value = "  ",
+	Enum = "  ",
+	Keyword = "  ",
+	Snippet = "  ",
+	Color = "  ",
+	File = "  ",
+	Reference = "  ",
+	Folder = "  ",
+	EnumMember = "  ",
+	Constant = "  ",
+	Struct = "  ",
+	Event = "  ",
+	Operator = "  ",
+	TypeParameter = "  ",
 }
 
 cmp.setup({
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
-  experimental = {
-    ghost_text = true,
-    native_menu = false,
-  },
-  formatting = {
-    format = lspkind.cmp_format({
-      before = function(entry, vim_item)
-        vim_item.kind = string.format("%s %s", vim_item.kind, cmp_kinds[vim_item.kind]) -- icons
-        -- Set icon and menu
-        vim_item.menu = ({
-          nvim_lsp = "[LSP]",
-          luasnip = "[Snippet]",
-          buffer = "[Buffer]",
-          path = "[Path]",
-        })[entry.source.name]
-        return vim_item
-      end,
-    }),
-  },
-  mapping = {
-    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }), -- เรียก autocomplete
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- ยืนยันการเลือกด้วย Enter
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.confirm({ select = true }) -- ยืนยันการเลือกด้วย Tab
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item() -- เลือกไอเท็มก่อนหน้า
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<Up>'] = cmp.mapping.select_prev_item(), -- เลือกไอเท็มก่อนหน้าด้วยลูกศรขึ้น
-    ['<Down>'] = cmp.mapping.select_next_item(), -- เลือกไอเท็มถัดไปด้วยลูกศรลง
-  },
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "luasnip" },
-  }, {
-    { name = "buffer" },
-    { name = "path" },
-  }),
+	window = {
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
+	},
+	experimental = {
+		ghost_text = true,
+		native_menu = false,
+	},
+	formatting = {
+		format = lspkind.cmp_format({
+			before = function(entry, vim_item)
+				vim_item.kind = string.format("%s %s", vim_item.kind, cmp_kinds[vim_item.kind])
+				vim_item.menu = ({
+					nvim_lsp = "[LSP]",
+					luasnip = "[Snippet]",
+					buffer = "[Buffer]",
+					path = "[Path]",
+				})[entry.source.name]
+				return vim_item
+			end,
+		}),
+	},
+	mapping = cmp.mapping.preset.insert({
+    		['<C-Space>'] = cmp.mapping.complete(),
+		['<CR>'] = cmp.mapping.confirm({ select = true }),
+		['<Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.confirm({ select = true })
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end, { 'i', 's' }),
+		['<S-Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { 'i', 's' }),
+		['<Up>'] = cmp.mapping.select_prev_item(),
+		['<Down>'] = cmp.mapping.select_next_item(),
+	}),
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	sources = {
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+    		{ name = "buffer" },
+    		{ name = "path" },
+   	}, 
+    experimental = {
+      ghost_text = true,
+    },
 })
 
--- Customize colors and appearance for completion popup
 vim.cmd([[
 highlight CmpPmenu guibg=#282c34 guifg=#abb2bf
 highlight CmpPmenuSel guibg=#61afef guifg=#ffffff
@@ -162,148 +184,139 @@ highlight CmpItemKind guifg=#c678dd
 highlight CmpItemMenu guifg=#56b6c2
 ]])
 
--- For better integration with nvim-autopairs
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local npairs = require('nvim-autopairs')
 
 npairs.setup({
-  check_ts = true,
-  ts_config = {
-    lua = {'string', 'source'},
-    javascript = {'template_string'},
-    java = false,
-  }
+	check_ts = true,
+	ts_config = {
+		lua = { 'string', 'source' },
+		javascript = { 'template_string' },
+		java = false,
+	}
 })
 
-cmp.event:on(
-  'confirm_done',
-  cmp_autopairs.on_confirm_done()
-)
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
--- Treesitter configuration
 require("nvim-treesitter.configs").setup({
-  ensure_installed = { "javascript", "typescript", "html", "css", "lua", "json" }, 
-  sync_install = false, -- ติดตั้ง languages แบบ synchronous
-  auto_install = true, -- ติดตั้ง languages อัตโนมัติเมื่อเปิดไฟล์ที่ยังไม่มีการติดตั้ง
-  ignore_install = {}, -- รายชื่อ parsers ที่ไม่ต้องการติดตั้ง
+	ensure_installed = { "javascript", "typescript", "html", "css", "lua", "json" },
+	sync_install = false,
+	auto_install = true,
+	ignore_install = {},
 
-  highlight = {
-    enable = true, -- เปิดใช้งาน syntax highlighting
-    additional_vim_regex_highlighting = false, -- ไม่ใช้ regex-based highlighting
-  },
-  indent = {
-    enable = true, -- เปิดใช้งานการจัดรูปแบบการย่อหน้าอัตโนมัติ
-  },
-  autotag = {
-    enable = true, -- เพิ่มแท็กปิดอัตโนมัติสำหรับ HTML, XML
-  },
-  context_commentstring = {
-    enable = true, -- เปลี่ยนวิธีการใส่คอมเมนต์ตาม context ของไฟล์
-  },
+	highlight = {
+		enable = true,
+		additional_vim_regex_highlighting = false,
+	},
+	indent = {
+		enable = true,
+	},
+	autotag = {
+		enable = true,
+	},
+	context_commentstring = {
+		enable = true,
+	},
 })
 
--- LSP Configurations
-local lspconfig = require("lspconfig")
+local lspconfig = require('lspconfig')
 
-lspconfig.tsserver.setup({})
 lspconfig.html.setup({})
 lspconfig.cssls.setup({})
-lspconfig.lua_ls.setup({
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        globals = {'vim'},
-      },
-      workspace = {
-        library = vim.api.nvim_get_runtime_file("", true),
-        checkThirdParty = false,
-      },
-      telemetry = {
-        enable = false,
-      },
-    },
-  },
-})
+lspconfig.tsserver.setup({})
 
--- nvim-tree setup with icons
 local nvim_tree = require("nvim-tree")
 
 nvim_tree.setup({
-  update_focused_file = {
-    enable = true,
-    update_cwd = true,
-  },
-  view = {
-    width = 70,
-    side = 'left',
-  },
-  renderer = {
-    icons = {
-      glyphs = {
-        default = "",
-        symlink = "",
-        git = {
-          unstaged = "✗",
-          staged = "✓",
-          unmerged = "",
-          renamed = "➜",
-          untracked = "★",
-          deleted = "",
-          ignored = "◌",
-        },
-        folder = {
-          default = "",
-          open = "",
-          empty = "",
-          empty_open = "",
-          symlink = "",
-          symlink_open = "",
-        },
-      },
-    },
-  },
-  filters = {
-    dotfiles = true,
-  },
-  git = {
-    enable = true,
-    ignore = false,
-  },
+	update_focused_file = {
+		enable = true,
+		update_cwd = true,
+	},
+	view = {
+		width = 30,
+		side = 'left',
+	},
+	renderer = {
+		icons = {
+			glyphs = {
+				default = "",
+				symlink = "",
+				git = {
+					unstaged = "✗",
+					staged = "✓",
+					unmerged = "",
+					renamed = "➜",
+					untracked = "★",
+					deleted = "",
+					ignored = "◌",
+				},
+				folder = {
+					default = "",
+					open = "",
+					empty = "",
+					empty_open = "",
+					symlink = "",
+					symlink_open = "",
+				},
+			},
+		},
+	},
+	filters = {
+		dotfiles = true,
+	},
+	git = {
+		enable = true,
+		ignore = false,
+	},
 })
 
--- Auto format with Prettier on save
-
-vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-    pattern = { "*js", "*.ts", "*.jsx", "*.tsx", "*.html", "*.css"},
-    callback = function()
-        vim.api.nvim_exec('silent! normal! g`"zv', false)
-    end,
-})
-
-
-vim.o.updatetime = 300
-vim.o.timeoutlen = 500
-
--- Disable file changed warning
-vim.opt.writebackup = false
-vim.opt.swapfile = false
-vim.opt.backup = false
-
-
--- Tailwind CSS configuration
-vim.g.tailwindcss_enabled = true
-
--- Set colorscheme
 vim.cmd([[colorscheme tokyonight]])
 
--- Options
-vim.opt.number = true -- Show line numbers
-vim.opt.wrap = false -- Disable line wrap
+vim.g.mapleader = " "
 
--- Key mappings
+vim.opt.encoding = "utf-8"
+vim.opt.fileencoding = "utf-8"
+
+vim.opt.number = true
+
+vim.opt.title = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.hlsearch = true
+vim.opt.backup = false
+vim.opt.showcmd = true
+vim.opt.cmdheight = 1
+vim.opt.laststatus = 3
+vim.opt.expandtab = true
+vim.opt.scrolloff = 10
+vim.opt.shell = "fish"
+vim.opt.backupskip = { "/tmp/*", "/private/tmp/*" }
+vim.opt.inccommand = "split"
+vim.opt.ignorecase = true
+vim.opt.smarttab = true
+vim.opt.breakindent = true
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.wrap = false
+vim.opt.backspace = { "start", "eol", "indent" }
+vim.opt.path:append({ "**" }) 
+vim.opt.wildignore:append({ "*/node_modules/*" })
+vim.opt.splitbelow = true 
+vim.opt.splitright = true 
+vim.opt.splitkeep = "cursor"
+vim.opt.mouse = "a"
+vim.opt.formatoptions:append({ "r" })
+
+
+vim.cmd([[let &t_Cs = "\e[4:3m"]])
+vim.cmd([[let &t_Ce = "\e[4:0m"]])
+vim.cmd([[au BufNewFile,BufRead *.astro setf astro]])
+vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
+
+if vim.fn.has("nvim-0.8") == 1 then
+	vim.opt.cmdheight = 0
+end
+
 local map = vim.keymap.set
 
 map("i", "<C-b>", "<ESC>^i", { desc = "Move to beginning of line" })
@@ -312,3 +325,34 @@ map("n", ";", ":")
 map("n", "ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
 map("n", "chc", "<cmd>Telescope colorscheme<cr>", { desc = "Change theme real time!" })
 map("n", "tf", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle NvimTree" })
+map("n", ";", "<cmd>FineCmdline<CR>", { noremap = true, silent = true })
+map('n', '<leader>f', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.formatting.prettier.with({
+            filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "html", "css" },
+            extra_args = { "--tab-width", "2" },
+        }),
+    },
+})
+
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.formatting.prettier.with({
+            filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "html", "css" },
+            extra_args = { "--tab-width", "30" },
+        }),
+    },
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = { "*.html", "*.css", "*.js", "*.jsx", "*.ts", "*.tsx" },
+    callback = function() vim.lsp.buf.format({ async = false }) end,
+})
+
