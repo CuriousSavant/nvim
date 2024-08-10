@@ -1,5 +1,19 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
+local map = vim.keymap.set
+
+map("i", "<C-b>", "<ESC>^i", { desc = "Move to beginning of line" })
+map("n", "<Esc>", "<cmd>noh<CR>", { desc = "Clear highlights" })
+map("n", ";", ":")
+map("n", "ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
+map("n", "chc", "<cmd>Telescope colorscheme<cr>", { desc = "Change theme real time!" })
+map("n", "tf", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle NvimTree" })
+map("n", ";", "<cmd>FineCmdline<CR>", { noremap = true, silent = true })
+map('n', '<leader>f', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+map("n", "te", "<cmd>:tabedit<CR>")
+map("n", "<Tab>", ":tabnext<Return>")
+map("n", "<S-Tab>", ":tabprev<Return>")
+
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
@@ -47,8 +61,10 @@ require("lazy").setup({
 
 	{ "folke/tokyonight.nvim", lazy = false, priority = 1000 },
 	{ "scottmckendry/cyberdream.nvim", lazy = false, priority = 1000 },
-
-
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons', }
+  },
 
 	{ "MunifTanjim/nui.nvim" },
 	{ "VonHeikemen/fine-cmdline.nvim",
@@ -77,8 +93,48 @@ require("lazy").setup({
         })
     end
 }
-
 })
+
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
 
 local cmp = require('cmp')
 local lspkind = require('lspkind')
@@ -242,11 +298,9 @@ nvim_tree.setup({
 				default = "",
 				symlink = "",
 				git = {
-					unstaged = "✗",
 					staged = "✓",
 					unmerged = "",
 					renamed = "➜",
-					untracked = "★",
 					deleted = "",
 					ignored = "◌",
 				},
@@ -316,17 +370,6 @@ vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
 if vim.fn.has("nvim-0.8") == 1 then
 	vim.opt.cmdheight = 0
 end
-
-local map = vim.keymap.set
-
-map("i", "<C-b>", "<ESC>^i", { desc = "Move to beginning of line" })
-map("n", "<Esc>", "<cmd>noh<CR>", { desc = "Clear highlights" })
-map("n", ";", ":")
-map("n", "ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
-map("n", "chc", "<cmd>Telescope colorscheme<cr>", { desc = "Change theme real time!" })
-map("n", "tf", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle NvimTree" })
-map("n", ";", "<cmd>FineCmdline<CR>", { noremap = true, silent = true })
-map('n', '<leader>f', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
 
 local null_ls = require("null-ls")
 
